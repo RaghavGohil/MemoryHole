@@ -2,6 +2,7 @@ from utils import *
 import config
 import colors
 import level_generator
+import background
 import pygame
 
 win = pygame.display.set_mode(config.WIN_SIZE)
@@ -11,6 +12,7 @@ pygame.display.set_caption(config.WIN_TITLE)
 RUNNING = True
 
 #initailize:
+background = background.Background()
 level_generator = level_generator.LevelGenerator()
 
 while RUNNING:
@@ -22,6 +24,7 @@ while RUNNING:
     win.fill(colors.WHITE)
 
     #draw
+    background.draw_bg(win,0)
     level_generator.draw_level(win,0)
 
     #update

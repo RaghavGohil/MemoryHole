@@ -14,9 +14,11 @@ class Block:
         }
 
     def draw_blocks(self,win:pygame.Surface,block_id:str,x:int,y:int)->None:
+        if block_id == 'N':
+            return
         try:
             block_img = self.blocks.get(block_id)
-            if block_id != None:
+            if block_img != None:
                 win.blit(block_img,(x*self.block_size,y*self.block_size))
             else:
                 raise Exception(f"Unable to get block id {block_id}")
