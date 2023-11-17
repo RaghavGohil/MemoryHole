@@ -10,6 +10,9 @@ pygame.display.set_caption(config.WIN_TITLE)
 
 RUNNING = True
 
+#initailize:
+level_generator = level_generator.LevelGenerator()
+
 while RUNNING:
     #events
     for e in pygame.event.get():
@@ -19,11 +22,7 @@ while RUNNING:
     win.fill(colors.WHITE)
 
     #draw
-
-    try:
-        level_generator.draw_level(win,0)
-    except e:
-        quit_r('Unable to generate level.'+e)
+    level_generator.draw_level(win,0)
 
     #update
     pygame.display.flip()
