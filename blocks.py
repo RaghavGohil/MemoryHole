@@ -31,13 +31,12 @@ class TrapBlock(pygame.sprite.Sprite):
 class Blocks:
 
     def __init__(self):
-        self.block_size = 30 # hardcoded this value since size of every block is 30px,30px
         self.block_classes = [HoleBlock,WallBlock,TrapBlock]
 
     def add_blocks_to_groups(self,block_id:str,x:int,y:int)->None:
         for bc in self.block_classes:
             if bc.id == block_id:
-                bc.container.add(bc(x*self.block_size,y*self.block_size))
+                bc.container.add(bc(x,y))
                 
     def draw_and_update_sprites(self,win:pygame.surface.Surface)->None:
         for bc in self.block_classes:

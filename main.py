@@ -4,6 +4,7 @@ import colors
 import level_generator
 import background
 import pygame
+from player import Player
 
 RUNNING = True
 
@@ -15,9 +16,12 @@ clock = pygame.time.Clock()
 deltatime = 0.0
 
 #initailize:
+
+player = Player()
+
 background = background.Background()
 level_generator = level_generator.LevelGenerator()
-level_generator.generate_level(0)
+level_generator.generate_level(player,0)
 
 while RUNNING:
     #events
@@ -30,6 +34,7 @@ while RUNNING:
     #draw
     background.draw_bg(win,0)
     level_generator.draw_level(win)
+    player.draw_and_update_sprite(win)
     #update
     pygame.display.flip()
 
