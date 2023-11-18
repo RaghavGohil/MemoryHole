@@ -5,15 +5,19 @@ import level_generator
 import background
 import pygame
 
-win = pygame.display.set_mode(config.WIN_SIZE)
+RUNNING = True
 
+win = pygame.display.set_mode(config.WIN_SIZE)
 pygame.display.set_caption(config.WIN_TITLE)
 
-RUNNING = True
+clock = pygame.time.Clock()
+
+deltatime = 0.0
 
 #initailize:
 background = background.Background()
 level_generator = level_generator.LevelGenerator()
+level_generator.generate_level(0)
 
 while RUNNING:
     #events
@@ -25,7 +29,10 @@ while RUNNING:
 
     #draw
     background.draw_bg(win,0)
-    level_generator.draw_level(win,0)
-
+    level_generator.draw_level(win)
     #update
     pygame.display.flip()
+
+    #clocking
+    clock_tick = clock.tick(config.GAME_FPS)
+    deltatime = clock_tick/1000 
