@@ -25,7 +25,8 @@ level_generator.generate_level(player,0)
 
 while RUNNING:
     #events
-    for e in pygame.event.get():
+    events = pygame.event.get()
+    for e in events:
         if e.type == pygame.QUIT:
             quit_r("X pressed.")
     #refresh
@@ -34,7 +35,7 @@ while RUNNING:
     #draw
     background.draw_bg(win,0)
     level_generator.draw_level(win)
-    player.draw_and_update_sprite(win)
+    player.draw_and_update_sprite(win,events,deltatime)
     #update
     pygame.display.flip()
 
