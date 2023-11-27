@@ -27,7 +27,6 @@ class LevelGenerator: # levels can only be generated if the player has spawned i
                     has_found_player = True
         if not has_found_player:
              raise Exception('Player could not be spawned in map! Please add a P in level.')
-        print(LevelGenerator.current_level)
     
     def draw_level(self,win:pygame.surface.Surface)->None:
         self.__block_script.draw_and_update_sprites(win)

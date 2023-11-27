@@ -42,6 +42,9 @@ class Player(pygame.sprite.Sprite):
         collide = False
         for hole in HoleBlock.container:
             collide = self.rect.colliderect(hole.rect)
+            if collide == True:
+                break 
+
         if collide:
             Blocks.del_all_blocks()
             change_level()
