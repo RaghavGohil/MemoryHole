@@ -11,7 +11,7 @@ class LevelGenerator: # levels can only be generated if the player has spawned i
         self.__block_script= Blocks() 
         self.num_blocks_xandy = 20
         self.block_size = 30
-
+    
     def generate_level(self,player:Player,num_level:int)->None: #num_level starts with 0
         has_found_player = False
         if (num_level+1) > len(levels.maps):

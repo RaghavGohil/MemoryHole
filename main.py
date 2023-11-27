@@ -35,7 +35,7 @@ while RUNNING:
     #draw
     background.draw_bg(win,0)
     level_generator.draw_level(win)
-    player.draw_and_update_sprite(win,events,deltatime)
+    player.draw_and_update_sprite(win,deltatime*config.GAME_FPS)
     #update
     pygame.display.flip()
 
