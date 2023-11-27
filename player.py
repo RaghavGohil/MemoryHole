@@ -1,4 +1,5 @@
 from my_math import *
+from blocks import * 
 import pygame
 
 class Player(pygame.sprite.Sprite):
@@ -11,12 +12,14 @@ class Player(pygame.sprite.Sprite):
         self.move_amt = 5 
         self.move_time = 3
         self.lerp_time = 0
+        self.can_collide = True
     
     def set_player(self,pos:tuple)->None:
         self.rect.topleft = pos 
     
-    def update(self,framed_delta:float):
+    def update(self,framed_delta:float,change_level):
         self.__move_player(framed_delta)
+        self.__hole_collision_level_change(change_level)
 
     def draw(self,win:pygame.surface.Surface)->None:
         win.blit(self.image, self.rect)
@@ -34,11 +37,18 @@ class Player(pygame.sprite.Sprite):
             temp_pos[0] += self.move_amt * framed_delta
         
         self.rect.topleft = tuple(temp_pos)
-        #if(self.lerp_time < self.move_time):
-        #    self.rect.topleft = tuple(lerp(list(self.rect.topleft),temp_pos,self.lerp_time))
-        #self.lerp_time += framed_delta
-        #self.rect.topleft = tuple(pos)
+        
+    def __hole_collision_level_change(self, change_level)->None: # change level callback actually calls the generate level in game
+        collide = False
+        for hole in HoleBlock.container:
+            collide = self.rect.colliderect(hole.rect)
+        if collide:
+            Blocks.del_all_blocks()
+            change_level()
+            can_collide = True
+        else:
+            can_collide = False
 
-    def draw_and_update_sprite(self,win:pygame.surface.Surface,framed_delta:float)->None:
-        self.update(framed_delta)
+    def draw_and_update_sprite(self,win:pygame.surface.Surface,framed_delta:float,change_level)->None: #for learning about the arguments visit functions above
+        self.update(framed_delta,change_level)
         self.draw(win)

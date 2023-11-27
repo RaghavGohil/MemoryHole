@@ -29,16 +29,22 @@ class TrapBlock(pygame.sprite.Sprite):
 
 
 class Blocks:
+    block_classes = [HoleBlock,WallBlock,TrapBlock]
 
     def __init__(self):
-        self.block_classes = [HoleBlock,WallBlock,TrapBlock]
+        pass
+
+    @staticmethod
+    def del_all_blocks():
+       for bc in Blocks.block_classes:
+            bc.container.empty()
 
     def add_blocks_to_groups(self,block_id:str,x:int,y:int)->None:
-        for bc in self.block_classes:
+        for bc in Blocks.block_classes:
             if bc.id == block_id:
                 bc.container.add(bc(x,y))
                 
     def draw_and_update_sprites(self,win:pygame.surface.Surface)->None:
-        for bc in self.block_classes:
+        for bc in Blocks.block_classes:
             bc.container.update()
             bc.container.draw(win)

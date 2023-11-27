@@ -20,8 +20,15 @@ deltatime = 0.0
 player = Player()
 
 background = background.Background()
+
+#levels:
+
 level_generator = level_generator.LevelGenerator()
-level_generator.generate_level(player,0)
+
+try:
+    level_generator.generate_level(player)
+except Exception as e:
+    quit_r(f"level could not be generated {e}")
 
 while RUNNING:
     #events
@@ -35,7 +42,7 @@ while RUNNING:
     #draw
     background.draw_bg(win,0)
     level_generator.draw_level(win)
-    player.draw_and_update_sprite(win,deltatime*config.GAME_FPS)
+    player.draw_and_update_sprite(win,deltatime*config.GAME_FPS,lambda:level_generator.generate_level(player))
     #update
     pygame.display.flip()
 
