@@ -10,8 +10,7 @@ class LevelGenerator: # levels can only be generated if the player has spawned i
 
     def __init__(self):
         self.__block_script= Blocks() 
-        self.num_blocks_xandy = 20
-        self.block_size = 30
+        self.num_blocks_xandy = int(config.WIN_SIZE[0]/config.GAME_BLOCK_SIZE)
     
     def generate_level(self,player:Player)->None: #LevelGenerator.current_level starts with 0
         has_found_player = False
@@ -21,9 +20,9 @@ class LevelGenerator: # levels can only be generated if the player has spawned i
         for y in range(self.num_blocks_xandy):
             for x in range(self.num_blocks_xandy):
                 c = levels.maps[LevelGenerator.current_level][y][x]
-                self.__block_script.add_blocks_to_groups(c,x*self.block_size,y*self.block_size) 
+                self.__block_script.add_blocks_to_groups(c,x*config.GAME_BLOCK_SIZE,y*config.GAME_BLOCK_SIZE) 
                 if c == 'P' and has_found_player == False: # only spawn in the player once
-                    player.set_player((x*self.block_size,y*self.block_size))
+                    player.set_player((x*config.GAME_BLOCK_SIZE,y*config.GAME_BLOCK_SIZE))
                     has_found_player = True
         if not has_found_player:
              raise Exception('Player could not be spawned in map! Please add a P in level.')

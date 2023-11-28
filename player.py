@@ -1,4 +1,5 @@
 import math
+import animator
 from my_math import *
 from blocks import * 
 import pygame
@@ -7,10 +8,14 @@ class Player(pygame.sprite.Sprite):
 
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load('assets/player/player.png')
+        
+        # loading animations
+        self.animator = animator.Animator()
+
+        self.image = self.animator.image 
         self.rect = self.image.get_rect()
         self.rect.topleft = (0,0)
-        self.move_speed= 5 
+        self.move_speed = 2 
         self.collision_move_amt = 5
     
     def set_player(self,pos:tuple)->None:
@@ -38,7 +43,7 @@ class Player(pygame.sprite.Sprite):
         
         if not vec_is_zero(direction):
             direction_speed_vec = vec_mul(vec_normalize(direction),self.move_speed*framed_delta)
-            self.rect.topleft = tuple(vec_add(list(self.rect.topleft),direction_speed_vec))
+            self.rect.topleft = vec_add(list(self.rect.topleft),direction_speed_vec)
         
     def __hole_collision_level_change(self, change_level)->None: # change level callback actually calls the generate level in game
         collide = False
