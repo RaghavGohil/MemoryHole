@@ -9,7 +9,7 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.image.load('assets/player/player.png')
         self.rect = self.image.get_rect()
         self.rect.topleft = (0,0)
-        self.move_amt = 5 
+        self.move_speed= 5 
         self.move_time = 3
         self.lerp_time = 0
     
@@ -25,17 +25,19 @@ class Player(pygame.sprite.Sprite):
 
     def __move_player(self,framed_delta:float)->None: #framed_delta = framed_delta * framerate
         keys = pygame.key.get_pressed()
-        temp_pos = [self.rect.topleft[0],self.rect.topleft[1]]
+        direction = [0,0]
         if keys[pygame.K_UP] or keys[pygame.K_w]: 
-            temp_pos[1] -= self.move_amt * framed_delta
+            direction[1] -= 1
         if keys[pygame.K_DOWN] or keys[pygame.K_s]:
-            temp_pos[1] += self.move_amt * framed_delta
+            direction[1] += 1
         if keys[pygame.K_LEFT] or keys[pygame.K_a]: 
-            temp_pos[0] -= self.move_amt * framed_delta
+            direction[0] -= 1
         if keys[pygame.K_RIGHT] or keys[pygame.K_d]: 
-            temp_pos[0] += self.move_amt * framed_delta
+            direction[0] += 1
         
-        self.rect.topleft = tuple(temp_pos)
+        if not vec_is_zero(direction):
+            normalized_pos = vec_mul(vec_normalize(direction),self.move_speed*framed_delta)
+            self.rect.topleft = tuple(vec_add(list(self.rect.topleft),normalized_pos))
         
     def __hole_collision_level_change(self, change_level)->None: # change level callback actually calls the generate level in game
         collide = False

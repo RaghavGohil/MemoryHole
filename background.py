@@ -4,7 +4,7 @@ class Background(): # no need to create a sprite
 
     def __init__(self):
         self.__backgrounds = [
-            pygame.image.load('assets/backgrounds/bg1.png').convert(),
+            pygame.image.load('assets/backgrounds/background1.png').convert(),
         ]
         self.num_backgrounds = len(self.__backgrounds)
     
