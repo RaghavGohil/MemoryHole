@@ -12,19 +12,23 @@ class Player(pygame.sprite.Sprite):
 
         # loading animations
         self.animator = animator.Animator()
+        self.animation_fps = 10 #frames to play in a sec
 
-        self.idle_state = [pygame.image.load('assets/player/player1.png')]
-        self.walking_state = [pygame.image.load('assets/player/player1.png'),pygame.image.load('assets/player/player2.png')]
+        self.idle_animation = [pygame.image.load('assets/player/player1.png')]
+        self.walking_animation = [pygame.image.load('assets/player/player1.png'),pygame.image.load('assets/player/player2.png')]
         
-        self.animator.add_animation('idle',self.idle_state)
-        self.animator.add_animation('walking',self.walking_state)
+        self.animator.add_animation('idle',self.idle_animation)
+        self.animator.add_animation('walking',self.walking_animation)
 
         self.image = self.animator.image 
 
         self.rect = self.image.get_rect()
         self.rect.topleft = (0,0)
+
         self.move_speed = 2 
         self.collision_move_amt = 5
+
+        self.is_facing_right = True
     
     def set_player(self,pos:tuple)->None:
         self.rect.topleft = pos 
@@ -34,12 +38,16 @@ class Player(pygame.sprite.Sprite):
         self.__wall_collision()
         self.__move_player(framed_delta)
         self.__animate_player(framed_delta)
+        self.__flip_sprite()
 
     def draw(self,win:pygame.surface.Surface)->None:
         win.blit(self.image, self.rect)
 
+    def __flip_sprite(self)->None:
+        self.image = pygame.transform.flip(self.image,not self.is_facing_right,False)
+
     def __animate_player(self,framed_delta:float)->None:
-        self.animator.play_animation(framed_delta) 
+        self.animator.play_animation(self.animation_fps,framed_delta) 
         self.image = self.animator.image
 
     def __move_player(self,framed_delta:float)->None: #framed_delta = framed_delta * framerate
@@ -47,8 +55,10 @@ class Player(pygame.sprite.Sprite):
         direction = [0,0]
         if (keys[pygame.K_LEFT] or keys[pygame.K_a]): 
             direction[0] -= 1
+            self.is_facing_right = False
         if (keys[pygame.K_RIGHT] or keys[pygame.K_d]): 
             direction[0] += 1
+            self.is_facing_right = True 
         if (keys[pygame.K_UP] or keys[pygame.K_w]): 
             direction[1] -= 1
         if (keys[pygame.K_DOWN] or keys[pygame.K_s]):
