@@ -26,7 +26,7 @@ background = background.Background()
 level_generator = level_generator.LevelGenerator()
 
 try:
-    level_generator.generate_level(player)
+    level_generator.load_level(player)
 except Exception as e:
     quit_r(f"level could not be generated {e}")
 
@@ -40,9 +40,15 @@ while RUNNING:
     win.fill(colors.WHITE)
 
     #draw
+
     background.draw_bg(win,0)
     level_generator.draw_level(win)
-    player.draw_and_update_sprite(win,deltatime*config.GAME_FPS,lambda:level_generator.generate_level(player))
+
+    try:
+        player.draw_and_update_sprite(win,deltatime*config.GAME_FPS,lambda:level_generator.load_level(player))
+    except Exception as e:
+        quit_r(f"level could not be generated {e}")
+
     #update
     pygame.display.flip()
 

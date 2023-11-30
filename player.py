@@ -85,7 +85,6 @@ class Player(pygame.sprite.Sprite):
 
     def __wall_collision(self)->None:
         for wall in WallBlock.container:
-            print(f"{wall.rect.right - self.rect.left >= 0} {wall.rect.left - self.rect.right <= 0} {wall.rect.bottom - self.rect.top >= 0} {wall.rect.top - self.rect.bottom <= 0}")
             if self.rect.colliderect(wall.rect):
                 if wall.rect.right - self.rect.left >= 0: # left 
                     self.rect.left += self.collision_move_amt

@@ -28,7 +28,6 @@ class Animator: # our very own state machine!
         if self.current_state in self.__states:
             keyframes = self.__states.get(self.current_state)
             self.frame_delay_count += framed_delta/config.GAME_FPS 
-            print(self.frame_delay_count)
             if self.frame_delay_count > (1/fps):
                 self.image = keyframes[self.index]
                 self.index = (self.index + 1) % len(keyframes) 
