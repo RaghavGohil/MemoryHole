@@ -9,10 +9,18 @@ class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         
+
         # loading animations
         self.animator = animator.Animator()
 
+        self.idle_state = [pygame.image.load('assets/player/player1.png')]
+        self.walking_state = [pygame.image.load('assets/player/player1.png'),pygame.image.load('assets/player/player2.png')]
+        
+        self.animator.add_animation('idle',self.idle_state)
+        self.animator.add_animation('walking',self.walking_state)
+
         self.image = self.animator.image 
+
         self.rect = self.image.get_rect()
         self.rect.topleft = (0,0)
         self.move_speed = 2 
@@ -25,9 +33,14 @@ class Player(pygame.sprite.Sprite):
         self.__hole_collision_level_change(change_level)
         self.__wall_collision()
         self.__move_player(framed_delta)
+        self.__animate_player(framed_delta)
 
     def draw(self,win:pygame.surface.Surface)->None:
         win.blit(self.image, self.rect)
+
+    def __animate_player(self,framed_delta:float)->None:
+        self.animator.play_animation(framed_delta) 
+        self.image = self.animator.image
 
     def __move_player(self,framed_delta:float)->None: #framed_delta = framed_delta * framerate
         keys = pygame.key.get_pressed()
@@ -43,7 +56,10 @@ class Player(pygame.sprite.Sprite):
         
         if not vec_is_zero(direction):
             direction_speed_vec = vec_mul(vec_normalize(direction),self.move_speed*framed_delta)
-            self.rect.topleft = vec_add(list(self.rect.topleft),direction_speed_vec)
+            self.rect.topleft = vec_add(self.rect.topleft,direction_speed_vec)
+            self.animator.change_state('walking')
+        else:
+            self.animator.change_state('idle')
         
     def __hole_collision_level_change(self, change_level)->None: # change level callback actually calls the generate level in game
         collide = False
