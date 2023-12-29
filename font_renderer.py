@@ -7,9 +7,9 @@ class FontRenderer:
         self.__win = win 
     
     def createFont(self,size)->pygame.font.Font:
-        font = pygame.font.SysFont('Arial', size)
+        font = pygame.font.Font(config.FONT_LOCATION, size)
         return font
 
     def renderFont(self,font:pygame.font.Font,message:str,color:tuple,x,y)->None:
         text = font.render(message,config.FONT_ANTIALIAS,color)
-        text.blit(self.__win,(x,y))
+        self.__win.blit(text,(x,y))

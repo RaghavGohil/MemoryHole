@@ -33,7 +33,6 @@ class LevelGenerator: # levels can only be generated if the player has spawned i
             raise Exception(f'Invalid level! Please add P or H to maintain integrity. Index: {level_index}')
 
     def load_level(self,player:Player)->None: #LevelGenerator.current_level starts with 0
-        is_transitioning = True
         LevelGenerator.current_level += 1 # start with level 0
         if (LevelGenerator.current_level) > len(levels.maps)-1:
                 raise Exception('Level number cannot be greater than number of maps.')
@@ -47,5 +46,5 @@ class LevelGenerator: # levels can only be generated if the player has spawned i
                 if c == 'P': # only spawn in the player once
                     player.set_player((x*blocks.Blocks.block_size,y*blocks.Blocks.block_size))
     
-    def draw_level(self,win:pygame.surface.Surface)->None:
-        self.__block_script.draw_and_update_sprites(win)
+    def draw_level(self,win:pygame.surface.Surface,deltatime:float)->None:
+        self.__block_script.draw_and_update_sprites(win,deltatime)

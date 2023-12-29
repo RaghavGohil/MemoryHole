@@ -18,10 +18,14 @@ clock = pygame.time.Clock()
 
 deltatime = 0.0
 
-#initailize:
+def toggle_fullscreen(event:pygame.event.Event)->None:
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_x:
+            pygame.display.toggle_fullscreen()
 
-font_renderer = font_renderer.FontRenderer(win)
-text = font_renderer.createFont(400)
+#initailize:
+renderer = font_renderer.FontRenderer(win)
+text = renderer.createFont(20)
 player = player.Player()
 background = background.Background()
 level_generator = level_generator.LevelGenerator()
@@ -30,11 +34,6 @@ try:
     level_generator.load_level(player)
 except Exception as e:
     quit_r(f"level could not be generated {e}")
-
-def toggle_fullscreen(event:pygame.event.Event)->None:
-    if event.type == pygame.KEYDOWN:
-        if event.key == pygame.K_x:
-            pygame.display.toggle_fullscreen()
 
 while RUNNING:
     #events
@@ -49,14 +48,14 @@ while RUNNING:
     #draw
 
     background.draw_bg(win,0)
-    level_generator.draw_level(win)
-    font_renderer.renderFont(text,'Hello wtf',colors.WHITE,0,0) 
+    level_generator.draw_level(win,deltatime)
     
     try:
         player.draw_and_update_sprite(win,deltatime*config.FPS,lambda:level_generator.load_level(player))
     except Exception as e:
         quit_r(f"level could not be generated {e}")
 
+    renderer.renderFont(text,'why are you not working?',colors.WHITE,0,0) 
     #update
     pygame.display.flip()
 

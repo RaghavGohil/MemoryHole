@@ -1,5 +1,10 @@
 import math
 
+def lerp(a:float,b:float,t:float)->float:
+    res = 0
+    res += a * (1-t) + b*t
+    return res
+
 def vec_lerp(vec1:list ,vec2:list ,t:float)->list:
     res = [0,0]
     res[0] += vec1[0] * (1-t) + vec2[0] * t
