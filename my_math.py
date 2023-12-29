@@ -22,5 +22,9 @@ def vec_mul(vec:list,n)->list:
 def vec_add(vec1:list,vec2:list)->list:
     return [vec1[0]+vec2[0],vec1[1]+vec2[1]]
 
+def vec_sub(vec1:list,vec2:list)->list:
+    return [vec1[0]-vec2[0],vec1[1]-vec2[1]]
+
+
 def vec_is_zero(vec:list)->bool:
     return True if vec[0] == 0 and vec[1] == 0 else False

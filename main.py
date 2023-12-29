@@ -55,7 +55,7 @@ while RUNNING:
     except Exception as e:
         quit_r(f"level could not be generated {e}")
 
-    renderer.renderFont(text,'why are you not working?',colors.WHITE,0,0) 
+    renderer.renderFont(text,'why are you working?',colors.WHITE,0,0) 
     #update
     pygame.display.flip()
 

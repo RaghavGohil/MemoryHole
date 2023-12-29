@@ -21,7 +21,7 @@ class WallBlock(pygame.sprite.Sprite):
 
 class TrapBlock(pygame.sprite.Sprite):
     id = 'T'
-    ping_pong_individual_total_time = 2 #time for each ping to pong and vice versa
+    ping_pong_individual_total_time = 1 #time for each ping to pong and vice versa
     container = pygame.sprite.Group()
     def __init__(self,x:int,y:int):
         pygame.sprite.Sprite.__init__(self)
@@ -40,6 +40,7 @@ class TrapBlock(pygame.sprite.Sprite):
         self.ping_pong_curr_time += deltatime/self.ping_pong_individual_total_time
 
     def update(self,deltatime:float):
+
         if(self.ping_pong_curr_time < 1 and self.ping_pong_amount >= 0):
             self.play_ping_pong_animation(deltatime)
         else:
