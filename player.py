@@ -8,11 +8,9 @@ class Player(pygame.sprite.Sprite):
 
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        
-
         # loading animations
         self.animator = animator.Animator()
-        self.animation_fps = 10 #frames to play in a sec
+        self.animation_fps = 10 #frames to play in a sec(not made this dymnamic enough because it is a simple game duh)
 
         self.idle_animation = [pygame.image.load('assets/player/player1.png')]
         self.walking_animation = [pygame.image.load('assets/player/player1.png'),pygame.image.load('assets/player/player2.png')]

@@ -30,6 +30,7 @@ class TrapBlock(pygame.sprite.Sprite):
 
 class Blocks:
     block_classes = [HoleBlock,WallBlock,TrapBlock]
+    block_size = 30
 
     def __init__(self):
         pass

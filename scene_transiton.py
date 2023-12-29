@@ -20,6 +20,6 @@ class SceneTransition(pygame.sprite.Sprite):
         self.scene_has_changed = True
 
     def update(self):
-        if scene_has_changed:
+        if self.scene_has_changed:
             pass
 

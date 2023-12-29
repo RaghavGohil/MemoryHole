@@ -1,6 +1,9 @@
+FULLSCREEN = False 
+
 WIN_SIZE = (600,600)
-WIN_TITLE = 'MemoryHole'
+WIN_TITLE = 'MemoryHoles'
 
-GAME_FPS = 60
+FPS = 60
 
-GAME_BLOCK_SIZE = 30
+FONT_LOCATION = 'assets/fonts/Pixel_NES.otf'
+FONT_ANTIALIAS = False
