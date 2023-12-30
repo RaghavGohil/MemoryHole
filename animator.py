@@ -1,4 +1,3 @@
-import config
 import colors
 import pygame
 import blocks
@@ -22,13 +21,13 @@ class Animator: # our very own state machine!
     def add_animation(self,state_name:str,keyframes:list)->None:
         self.__states.update({state_name:keyframes})
 
-    def play_animation(self,fps:int,framed_delta:float)->None: # fps = num of frames to play in a sec
+    def play_animation(self,fps:int,deltatime:float)->None: # fps = num of frames to play in a sec
         if self.current_state == 'default':
-            self.image = pygame.Surface([config.GAME_BLOCK_SIZE,config.GAME_BLOCK_SIZE])
+            self.image = pygame.Surface([blocks.Blocks.block_size,blocks.Blocks.block_size])
             self.image.fill(colors.NO_TEXTURE)
         if self.current_state in self.__states:
             keyframes = self.__states.get(self.current_state)
-            self.frame_delay_count += framed_delta/config.FPS 
+            self.frame_delay_count += deltatime
             if self.frame_delay_count > (1/fps):
                 self.image = keyframes[self.index]
                 self.index = (self.index + 1) % len(keyframes) 

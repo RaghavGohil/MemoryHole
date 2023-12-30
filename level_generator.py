@@ -8,9 +8,10 @@ class LevelGenerator: # levels can only be generated if the player has spawned i
     is_transitioning = False
     current_level = -1 
 
-    def __init__(self):
+    def __init__(self,player:Player)->None:
         self.__block_script= blocks.Blocks() 
         self.num_blocks_xandy = int(config.WIN_SIZE[0]/blocks.Blocks.block_size)
+        self.change_level(player)
     
     def __check_level_integrity(self,level_index:int)->None:
         has_found_player = False
@@ -32,8 +33,14 @@ class LevelGenerator: # levels can only be generated if the player has spawned i
         if not has_found_player or not has_found_hole:
             raise Exception(f'Invalid level! Please add P or H to maintain integrity. Index: {level_index}')
 
-    def load_level(self,player:Player)->None: #LevelGenerator.current_level starts with 0
-        LevelGenerator.current_level += 1 # start with level 0
+    def change_level(self,player:Player)->None:
+        LevelGenerator.current_level+=1
+        self.__load_level(player)
+
+    def restart_level(self,player:Player)->None:
+        self.__load_level(player)
+
+    def __load_level(self,player:Player)->None: #LevelGenerator.current_level starts with 0
         if (LevelGenerator.current_level) > len(levels.maps)-1:
                 raise Exception('Level number cannot be greater than number of maps.')
 

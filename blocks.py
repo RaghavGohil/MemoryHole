@@ -31,7 +31,7 @@ class TrapBlock(pygame.sprite.Sprite):
         self.ping_pong_curr_time = 0
         self.ping_pong_amount = 3
 
-    def play_ping_pong_animation(self,deltatime:float):
+    def __play_ping_pong_animation(self,deltatime:float):
         if self.ping_pong_amount%2==0:
             self.image.set_alpha(my_math.lerp(255,0,self.ping_pong_curr_time))
         else:
@@ -42,7 +42,7 @@ class TrapBlock(pygame.sprite.Sprite):
     def update(self,deltatime:float):
 
         if(self.ping_pong_curr_time < 1 and self.ping_pong_amount >= 0):
-            self.play_ping_pong_animation(deltatime)
+            self.__play_ping_pong_animation(deltatime)
         else:
             self.ping_pong_amount -= 1
             self.ping_pong_curr_time = 0

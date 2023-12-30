@@ -4,6 +4,7 @@ import font_renderer
 import colors
 import level_generator
 import background
+import debug_screen
 import pygame
 import player
 
@@ -11,11 +12,12 @@ RUNNING = True
 
 win = pygame.display.set_mode(config.WIN_SIZE,pygame.SCALED)
 pygame.display.set_caption(config.WIN_TITLE)
-if config.FULLSCREEN:
+if config.START_WITH_FULLSCREEN:
     pygame.display.toggle_fullscreen()
 
 clock = pygame.time.Clock()
 
+curr_fps = 0.0
 deltatime = 0.0
 
 def toggle_fullscreen(event:pygame.event.Event)->None:
@@ -24,16 +26,10 @@ def toggle_fullscreen(event:pygame.event.Event)->None:
             pygame.display.toggle_fullscreen()
 
 #initailize:
-renderer = font_renderer.FontRenderer(win)
-text = renderer.createFont(20)
 player = player.Player()
 background = background.Background()
-level_generator = level_generator.LevelGenerator()
-
-try:
-    level_generator.load_level(player)
-except Exception as e:
-    quit_r(f"level could not be generated {e}")
+debug_screen = debug_screen.DebugScreen(win)
+level_generator = level_generator.LevelGenerator(player)
 
 while RUNNING:
     #events
@@ -51,14 +47,15 @@ while RUNNING:
     level_generator.draw_level(win,deltatime)
     
     try:
-        player.draw_and_update_sprite(win,deltatime*config.FPS,lambda:level_generator.load_level(player))
+        player.draw_and_update_sprite(win,deltatime,deltatime*curr_fps,lambda:level_generator.change_level(player),lambda:level_generator.restart_level(player))
     except Exception as e:
         quit_r(f"level could not be generated {e}")
 
-    renderer.renderFont(text,'why are you working?',colors.WHITE,0,0) 
+    debug_screen.draw_debug_info(curr_fps)
     #update
     pygame.display.flip()
 
     #clocking
+    curr_fps = clock.get_fps()
     clock_tick = clock.tick(config.FPS)
     deltatime = clock_tick/1000 

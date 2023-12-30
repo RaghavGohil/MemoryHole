@@ -29,18 +29,22 @@ class Player(pygame.sprite.Sprite):
         self.move_speed = 2 
 
         self.collision_move_amt = 1
-        self.collide_offset_px = 8
+        self.collision_move_boundary = 1
+
+        self.collide_offset_px = 10 
 
         self.is_facing_right = True
     
     def set_player(self,pos:tuple)->None:
         self.rect.topleft = pos 
     
-    def update(self,framed_delta:float,change_level):
-        self.__hole_collision_level_change(change_level)
+    def update(self,deltatime:float,framed_delta:float,change_level,restart_level):
+        self.__hole_collision(change_level)
+        self.__trap_collision(restart_level)
         self.__wall_collision()
+        self.__boundary_collision()
         self.__move_player(framed_delta)
-        self.__animate_player(framed_delta)
+        self.__animate_player(deltatime)
         self.__flip_sprite()
 
     def draw(self,win:pygame.surface.Surface)->None:
@@ -57,11 +61,11 @@ class Player(pygame.sprite.Sprite):
     def __flip_sprite(self)->None:
         self.image = pygame.transform.flip(self.image,not self.is_facing_right,False)
 
-    def __animate_player(self,framed_delta:float)->None:
-        self.animator.play_animation(self.animation_fps,framed_delta) 
+    def __animate_player(self,deltatime:float)->None:
+        self.animator.play_animation(self.animation_fps,deltatime) 
         self.image = self.animator.image
 
-    def __move_player(self,framed_delta:float)->None: #framed_delta = framed_delta * framerate
+    def __move_player(self,framed_delta:float)->None:
         self.keys = pygame.key.get_pressed()
         direction = [0,0]
         if (self.keys[pygame.K_LEFT] or self.keys[pygame.K_a]): 
@@ -82,17 +86,25 @@ class Player(pygame.sprite.Sprite):
         else:
             self.animator.change_state('idle')
         
-    def __hole_collision_level_change(self, change_level)->None: # change level callback actually calls the generate level in game
-        collide = False
-
-        for hole in HoleBlock.container:
-            collide = self.rect.colliderect(hole.rect)
-            if collide == True:
-                break 
-
-        if collide:
+    def __hole_collision(self, change_level)->None: # change level callback actually calls the generate level in game
+        if pygame.sprite.spritecollide(self,HoleBlock.container,False):
             Blocks.del_all_blocks()
             change_level() # changes the level itself so there is no need to put checks for collision
+
+    def __trap_collision(self,restart_level)->None:#restart level callback restarts the level
+        if pygame.sprite.spritecollide(self,TrapBlock.container,False):
+            Blocks.del_all_blocks()
+            restart_level() # changes the level itself so there is no need to put checks for collision
+
+    def __boundary_collision(self)->None:
+        if self.rect.left+self.collide_offset_px < 0:
+            self.rect.x += self.collision_move_amt
+        if self.rect.right-self.collide_offset_px > config.WIN_SIZE[0]:
+            self.rect.x -= self.collision_move_amt
+        if self.rect.top+self.collide_offset_px < 0:
+            self.rect.y += self.collision_move_amt
+        if self.rect.bottom-self.collide_offset_px > config.WIN_SIZE[1]:
+            self.rect.y -= self.collision_move_amt
 
     def __wall_collision(self)->None:
         walls = pygame.sprite.spritecollide(self, WallBlock.container,False)
@@ -106,6 +118,6 @@ class Player(pygame.sprite.Sprite):
             if wall.rect.collidepoint((self.rect.left+self.sidelen,self.rect.bottom+self.collide_offset_px)):
                 self.rect.y -= self.collision_move_amt
             
-    def draw_and_update_sprite(self,win:pygame.surface.Surface,framed_delta:float,change_level)->None: #for learning about the arguments visit functions above
-        self.update(framed_delta,change_level)
+    def draw_and_update_sprite(self,win:pygame.surface.Surface,deltatime:float,framed_delta:float,change_level,restart_level)->None: #for learning about the arguments visit functions above
+        self.update(deltatime,framed_delta,change_level,restart_level)
         self.draw(win)
