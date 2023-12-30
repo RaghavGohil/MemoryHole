@@ -1,5 +1,7 @@
 FULLSCREEN = False 
 
+DRAW_DEBUG = True 
+
 WIN_SIZE = (600,600)
 WIN_TITLE = 'MemoryHoles'
 

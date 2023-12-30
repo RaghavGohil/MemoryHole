@@ -1,5 +1,7 @@
 import math
+import config
 import animator
+import colors
 from my_math import *
 from blocks import * 
 import pygame
@@ -21,10 +23,13 @@ class Player(pygame.sprite.Sprite):
         self.image = self.animator.image 
 
         self.rect = self.image.get_rect()
+        self.sidelen = self.rect.right/2
         self.rect.topleft = (0,0)
 
         self.move_speed = 2 
-        self.collision_move_amt = 2
+
+        self.collision_move_amt = 1
+        self.collide_offset_px = 8
 
         self.is_facing_right = True
     
@@ -40,6 +45,14 @@ class Player(pygame.sprite.Sprite):
 
     def draw(self,win:pygame.surface.Surface)->None:
         win.blit(self.image, self.rect)
+        self.__draw_debug(win)
+    
+    def __draw_debug(self,win:pygame.surface.Surface):
+        if config.DRAW_DEBUG:
+            pygame.draw.rect(win,colors.DEBUG,pygame.rect.Rect(self.rect.left,self.rect.top,5,5))
+            pygame.draw.rect(win,colors.DEBUG,pygame.rect.Rect(self.rect.right,self.rect.top,5,5))
+            pygame.draw.rect(win,colors.DEBUG,pygame.rect.Rect(self.rect.left,self.rect.bottom,5,5))
+            pygame.draw.rect(win,colors.DEBUG,pygame.rect.Rect(self.rect.right,self.rect.bottom,5,5))
 
     def __flip_sprite(self)->None:
         self.image = pygame.transform.flip(self.image,not self.is_facing_right,False)
@@ -84,15 +97,15 @@ class Player(pygame.sprite.Sprite):
     def __wall_collision(self)->None:
         walls = pygame.sprite.spritecollide(self, WallBlock.container,False)
         for wall in walls:
-            if self.rect.right > wall.rect.left:
-                self.rect.right -= self.collision_move_amt
-            if self.rect.left > wall.rect.right:
-                self.rect.right += self.collision_move_amt
-            if self.rect.bottom > wall.rect.top:
-                self.rect.bottom -= self.collision_move_amt
-            if self.rect.top > wall.rect.bottom:
-                self.rect.top += self.collision_move_amt
-
+            if wall.rect.collidepoint((self.rect.right-self.collide_offset_px,self.rect.top+self.sidelen)):
+                self.rect.x -= self.collision_move_amt
+            if wall.rect.collidepoint((self.rect.left+self.collide_offset_px ,self.rect.top+self.sidelen)):
+                self.rect.x += self.collision_move_amt
+            if wall.rect.collidepoint((self.rect.left+self.sidelen,self.rect.top-self.collide_offset_px)):
+                self.rect.y += self.collision_move_amt
+            if wall.rect.collidepoint((self.rect.left+self.sidelen,self.rect.bottom+self.collide_offset_px)):
+                self.rect.y -= self.collision_move_amt
+            
     def draw_and_update_sprite(self,win:pygame.surface.Surface,framed_delta:float,change_level)->None: #for learning about the arguments visit functions above
         self.update(framed_delta,change_level)
         self.draw(win)
