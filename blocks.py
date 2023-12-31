@@ -51,12 +51,17 @@ class TrapBlock(pygame.sprite.Sprite):
 
 
 class Blocks:
+    deltatime = 0.0
     block_classes = [HoleBlock,WallBlock,TrapBlock]
     block_size = 30
 
-    def __init__(self):
-        pass
+    def __init__(self,win:pygame.surface.Surface)->None:
+        self.win = win
 
+    @staticmethod
+    def set_dynamic_data(deltatime:float)->None:
+        Blocks.deltatime = deltatime
+    
     @staticmethod
     def del_all_blocks():
        for bc in Blocks.block_classes:
@@ -67,7 +72,7 @@ class Blocks:
             if bc.id == block_id:
                 bc.container.add(bc(x,y))
                 
-    def draw_and_update_sprites(self,win:pygame.surface.Surface,deltatime)->None:
+    def draw_and_update_sprites(self)->None:
         for bc in Blocks.block_classes:
-            bc.container.update(deltatime)
-            bc.container.draw(win)
+            bc.container.update(Blocks.deltatime)
+            bc.container.draw(self.win)

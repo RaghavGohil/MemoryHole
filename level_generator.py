@@ -5,11 +5,12 @@ import config
 import pygame
 
 class LevelGenerator: # levels can only be generated if the player has spawned in.
+    win = None
     is_transitioning = False
     current_level = -1 
 
-    def __init__(self,player:Player)->None:
-        self.__block_script= blocks.Blocks() 
+    def __init__(self,blocks_script:blocks.Blocks,player:Player)->None:
+        self.__block_script = blocks_script 
         self.num_blocks_xandy = int(config.WIN_SIZE[0]/blocks.Blocks.block_size)
         self.change_level(player)
     
@@ -53,5 +54,5 @@ class LevelGenerator: # levels can only be generated if the player has spawned i
                 if c == 'P': # only spawn in the player once
                     player.set_player((x*blocks.Blocks.block_size,y*blocks.Blocks.block_size))
     
-    def draw_level(self,win:pygame.surface.Surface,deltatime:float)->None:
-        self.__block_script.draw_and_update_sprites(win,deltatime)
+    def draw_level(self)->None:
+        self.__block_script.draw_and_update_sprites()

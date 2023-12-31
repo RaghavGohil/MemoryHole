@@ -1,25 +1,28 @@
 import pygame
-import animator
+import my_math
+import colors
+import config
+import font_renderer
 
-class SceneTransition(pygame.sprite.Sprite):
-    def __init__(self):
-        self.animator = animator.Animator()
-        self.animation_fps = 10 #frames to play in a sec
+class SceneTransition:
+    def __init__(self,win:pygame.surface.Surface,animation_time:int)->None:
+        self.win = win
+        self.font_size = 40
+        self.renderer = font_renderer.FontRenderer(win)
+        self.font = self.renderer.create_font(self.font_size)
+        self.current_time = 0
+        self.animation_time = animation_time
+        self.surface = pygame.Surface((config.WIN_SIZE[0],config.WIN_SIZE[1]))
 
-        self.scene_transition_animation = []
+    def __calculate_animation_frame(self,deltatime:float)->None:
+        self.current_time += deltatime/self.animation_time
+        self.surface.set_alpha(my_math.lerp(0,1,self.current_time))
 
-        self.animator.add_animation('scene_transition_animation',self.scene_transition_animation) 
- 
-        self.image = self.animator.image
-        self.rect = self.image.get_rect()
-        
-        self.scene_has_changed = False # level load function is called
+    def play_animation(self,deltatime:float)->None:
+        if self.current_time < 1:
+            self.__calculate_animation_frame(deltatime) 
+        else:
+            self.surface.set_alpha(0)
 
-    @staticmethod
-    def animate(self):
-        self.scene_has_changed = True
-
-    def update(self):
-        if self.scene_has_changed:
-            pass
-
+    def __render_font(self,message:str)->None:
+        self.renderer.render_font(self.font,message,colors.WHITE,config.WIN_SIZE[0],config.WIN_SIZE[1],align_center=True)
