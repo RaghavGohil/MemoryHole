@@ -31,7 +31,7 @@ _blocks = blocks.Blocks(win)
 _background = background.Background(win)
 _debug_screen = debug_screen.DebugScreen(win)
 _level_generator = level_generator.LevelGenerator(_blocks,_player)
-_scene_transition = scene_transiton.SceneTransition(win,2)
+_scene_transition = scene_transiton.SceneTransition(win,5)
 
 while RUNNING:
     
@@ -49,14 +49,13 @@ while RUNNING:
     blocks.Blocks.set_dynamic_data(deltatime)
 
     #draw calls
-    _scene_transition.play_animation(deltatime)
     _background.draw_bg(0)
     _level_generator.draw_level()
     try:
         _player.draw_and_update_sprite(lambda:_level_generator.change_level(_player),lambda:_level_generator.restart_level(_player))
     except Exception as e:
         quit_r(f"level could not be generated {e}")
-
+    _scene_transition.play_animation(deltatime)
     #debug
 
     _debug_screen.draw_debug_info()

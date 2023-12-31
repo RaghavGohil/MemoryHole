@@ -5,13 +5,15 @@ import font_renderer
 
 class DebugScreen:
     
+    win = None
     instance = None
     info_dict = {}
 
     def __init__(self,win:pygame.surface.Surface)->None:
         DebugScreen.instance = self
+        DebugScreen.win = win 
         self.font_size = 15 
-        self.renderer = font_renderer.FontRenderer(win)
+        self.renderer = font_renderer.FontRenderer(DebugScreen.win)
         self.font = self.renderer.create_font(self.font_size)
         self.text_pos = 0
         DebugScreen.info_dict.update({'DRIVER ':pygame.display.get_driver()})
@@ -28,6 +30,11 @@ class DebugScreen:
     @staticmethod
     def watch(key,value)->None:
         DebugScreen.info_dict.update({key:value}) 
+    
+    @staticmethod
+    def draw_rect(rect:pygame.rect.Rect)->None:
+        if config.DRAW_DEBUG:
+            pygame.draw.rect(DebugScreen.win,colors.DEBUG,rect,1)
 
     def draw_debug_info(self)->None:
         if config.DRAW_DEBUG:

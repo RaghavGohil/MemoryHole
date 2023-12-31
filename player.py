@@ -2,6 +2,7 @@ import math
 import config
 import animator
 import colors
+from debug_screen import DebugScreen
 from my_math import *
 from blocks import * 
 import pygame
@@ -63,10 +64,8 @@ class Player(pygame.sprite.Sprite):
         self.__draw_debug()
     
     def __draw_debug(self):
-        if config.DRAW_DEBUG:
-            pygame.draw.rect(self.win,colors.DEBUG,self.rect,1)
-            pygame.draw.rect(self.win,colors.DEBUG,self.hitbox,1)
-
+        DebugScreen.instance.draw_rect(self.rect)
+        DebugScreen.instance.draw_rect(self.hitbox)
     def __flip_sprite(self)->None:
         self.image = pygame.transform.flip(self.image,not self.is_facing_right,False)
 

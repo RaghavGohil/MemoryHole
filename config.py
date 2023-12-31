@@ -1,9 +1,9 @@
 START_WITH_FULLSCREEN = False 
 
-DRAW_DEBUG = True
+DRAW_DEBUG = True 
 
 WIN_SIZE = (600,600)
-WIN_TITLE = 'MemoryHoles'
+WIN_TITLE = 'MemoryHoles: CLASSIC'
 
 FPS = 200 
 
