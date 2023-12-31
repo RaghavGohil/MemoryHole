@@ -18,7 +18,6 @@ if config.START_WITH_FULLSCREEN:
 
 clock = pygame.time.Clock()
 deltatime = 0.0
-framed_delta = 0.0
 
 def toggle_fullscreen(event:pygame.event.Event)->None:
     if event.type == pygame.KEYDOWN:
@@ -44,7 +43,7 @@ while RUNNING:
     win.fill(colors.WHITE)
 
     #dynamic data (dynamic data aren't game logic variables but common things like deltatime etc (python doesn't support pass by ref smh))
-    player.Player.set_dynamic_data(deltatime,framed_delta)
+    player.Player.set_dynamic_data(deltatime)
     blocks.Blocks.set_dynamic_data(deltatime)
 
     #draw calls
@@ -60,7 +59,6 @@ while RUNNING:
     _debug_screen.draw_debug_info()
     _debug_screen.instance.watch('FPS ',clock.get_fps())
     _debug_screen.instance.watch('DELTATIME ',deltatime)
-    _debug_screen.instance.watch('FRAMED DELTA',framed_delta)
 
     #update
     pygame.display.flip()
@@ -68,4 +66,3 @@ while RUNNING:
     #clocking
     clock_tick = clock.tick(config.FPS)
     deltatime = clock_tick/1000
-    framed_delta = deltatime*clock.get_fps()

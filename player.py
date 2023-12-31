@@ -9,14 +9,13 @@ import pygame
 class Player(pygame.sprite.Sprite):
     
     deltatime = 0.0 
-    framed_delta = 0.0 
 
     def __init__(self,win):
         pygame.sprite.Sprite.__init__(self)
         # loading animations
         self.win = win
         self.animator = animator.Animator()
-        self.animation_fps = 10 #frames to play in a sec(not made this dymnamic enough because it is a simple game duh)
+        self.animation_fps = 10#frames to play in a sec(not made this dymnamic enough because it is a simple game duh)
 
         self.idle_animation = [pygame.image.load('assets/player/player1.png')]
         self.walking_animation = [pygame.image.load('assets/player/player1.png'),pygame.image.load('assets/player/player2.png')]
@@ -30,7 +29,7 @@ class Player(pygame.sprite.Sprite):
         self.sidelen = self.rect.right/2
         self.rect.topleft = (0,0)
 
-        self.move_speed = 2 
+        self.move_speed = 150 
 
         self.collision_move_amt = 1
         self.collision_move_boundary = 1
@@ -40,9 +39,8 @@ class Player(pygame.sprite.Sprite):
         self.is_facing_right = True
     
     @staticmethod
-    def set_dynamic_data(deltatime,framed_delta):
+    def set_dynamic_data(deltatime):
         Player.deltatime = deltatime
-        Player.framed_delta = framed_delta
 
     def set_player(self,pos:tuple)->None:
         self.rect.topleft = pos 
@@ -89,7 +87,7 @@ class Player(pygame.sprite.Sprite):
             direction[1] += 1
 
         if not vec_is_zero(direction):
-            direction_speed_vec = vec_mul(vec_normalize(direction),self.move_speed*Player.framed_delta)
+            direction_speed_vec = vec_mul(vec_normalize(direction),self.move_speed*Player.deltatime)
             self.rect.topleft = vec_add(self.rect.topleft,direction_speed_vec)
             self.animator.change_state('walking')
         else:
