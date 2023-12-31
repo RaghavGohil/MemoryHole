@@ -18,7 +18,7 @@ class Player(pygame.sprite.Sprite):
         self.animation_fps = 10#frames to play in a sec(not made this dymnamic enough because it is a simple game duh)
 
         self.idle_animation = [pygame.image.load('assets/player/player1.png')]
-        self.walking_animation = [pygame.image.load('assets/player/player1.png'),pygame.image.load('assets/player/player2.png')]
+        self.walking_animation = [pygame.image.load('assets/player/player2.png'),pygame.image.load('assets/player/player1.png')]
         
         self.animator.add_animation('idle',self.idle_animation)
         self.animator.add_animation('walking',self.walking_animation)
@@ -28,19 +28,23 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.sidelen = self.rect.right/2
         self.rect.topleft = (0,0)
+        self.hitbox = self.rect.inflate(-15,-9)
+        self.hitbox_offset = (5,5)
 
         self.move_speed = 150 
 
         self.collision_move_amt = 1
-        self.collision_move_boundary = 1
-
-        self.collide_offset_px = 10 
+        self.collision_move_amt_boundary = 3
 
         self.is_facing_right = True
     
     @staticmethod
     def set_dynamic_data(deltatime):
         Player.deltatime = deltatime
+    
+    @staticmethod
+    def collided(sprite,other):
+        return sprite.hitbox.colliderect(other)
 
     def set_player(self,pos:tuple)->None:
         self.rect.topleft = pos 
@@ -60,10 +64,8 @@ class Player(pygame.sprite.Sprite):
     
     def __draw_debug(self):
         if config.DRAW_DEBUG:
-            pygame.draw.rect(self.win,colors.DEBUG,pygame.rect.Rect(self.rect.left,self.rect.top,5,5))
-            pygame.draw.rect(self.win,colors.DEBUG,pygame.rect.Rect(self.rect.right,self.rect.top,5,5))
-            pygame.draw.rect(self.win,colors.DEBUG,pygame.rect.Rect(self.rect.left,self.rect.bottom,5,5))
-            pygame.draw.rect(self.win,colors.DEBUG,pygame.rect.Rect(self.rect.right,self.rect.bottom,5,5))
+            pygame.draw.rect(self.win,colors.DEBUG,self.rect,1)
+            pygame.draw.rect(self.win,colors.DEBUG,self.hitbox,1)
 
     def __flip_sprite(self)->None:
         self.image = pygame.transform.flip(self.image,not self.is_facing_right,False)
@@ -73,6 +75,7 @@ class Player(pygame.sprite.Sprite):
         self.image = self.animator.image
 
     def __move_player(self)->None:
+
         self.keys = pygame.key.get_pressed()
         direction = [0,0]
         if (self.keys[pygame.K_LEFT] or self.keys[pygame.K_a]): 
@@ -92,37 +95,40 @@ class Player(pygame.sprite.Sprite):
             self.animator.change_state('walking')
         else:
             self.animator.change_state('idle')
+
+        #update the hitbox
+        self.hitbox.topleft = vec_add(self.rect.topleft,self.hitbox_offset)
         
     def __hole_collision(self, change_level)->None: # change level callback actually calls the generate level in game
-        if pygame.sprite.spritecollide(self,HoleBlock.container,False):
+        if pygame.sprite.spritecollide(self,HoleBlock.container,False,Player.collided):
             Blocks.del_all_blocks()
             change_level() # changes the level itself so there is no need to put checks for collision
 
     def __trap_collision(self,restart_level)->None:#restart level callback restarts the level
-        if pygame.sprite.spritecollide(self,TrapBlock.container,False):
+        if pygame.sprite.spritecollide(self,TrapBlock.container,False,Player.collided):
             Blocks.del_all_blocks()
             restart_level() # changes the level itself so there is no need to put checks for collision
 
     def __boundary_collision(self)->None:
-        if self.rect.left+self.collide_offset_px < 0:
-            self.rect.x += self.collision_move_amt
-        if self.rect.right-self.collide_offset_px > config.WIN_SIZE[0]:
-            self.rect.x -= self.collision_move_amt
-        if self.rect.top+self.collide_offset_px < 0:
-            self.rect.y += self.collision_move_amt
-        if self.rect.bottom-self.collide_offset_px > config.WIN_SIZE[1]:
-            self.rect.y -= self.collision_move_amt
+        if self.rect.left < 0:
+            self.rect.x += self.collision_move_amt_boundary
+        if self.rect.right > config.WIN_SIZE[0]:
+            self.rect.x -= self.collision_move_amt_boundary
+        if self.rect.top < 0:
+            self.rect.y += self.collision_move_amt_boundary
+        if self.rect.bottom > config.WIN_SIZE[1]:
+            self.rect.y -= self.collision_move_amt_boundary
 
     def __wall_collision(self)->None:
-        walls = pygame.sprite.spritecollide(self, WallBlock.container,False)
+        walls = pygame.sprite.spritecollide(self, WallBlock.container,False,Player.collided)
         for wall in walls:
-            if wall.rect.collidepoint((self.rect.right-self.collide_offset_px,self.rect.top+self.sidelen)):
+            if wall.rect.collidepoint((self.rect.right,self.rect.top+self.sidelen)):
                 self.rect.x -= self.collision_move_amt
-            if wall.rect.collidepoint((self.rect.left+self.collide_offset_px ,self.rect.top+self.sidelen)):
+            if wall.rect.collidepoint((self.rect.left ,self.rect.top+self.sidelen)):
                 self.rect.x += self.collision_move_amt
-            if wall.rect.collidepoint((self.rect.left+self.sidelen,self.rect.top-self.collide_offset_px)):
+            if wall.rect.collidepoint((self.rect.left+self.sidelen,self.rect.top)):
                 self.rect.y += self.collision_move_amt
-            if wall.rect.collidepoint((self.rect.left+self.sidelen,self.rect.bottom+self.collide_offset_px)):
+            if wall.rect.collidepoint((self.rect.left+self.sidelen,self.rect.bottom)):
                 self.rect.y -= self.collision_move_amt
             
     def draw_and_update_sprite(self,change_level,restart_level)->None: #for learning about the arguments visit functions above

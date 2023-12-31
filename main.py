@@ -6,6 +6,7 @@ import level_generator
 import blocks
 import background
 import debug_screen
+import scene_transiton
 import pygame
 import player
 
@@ -30,6 +31,7 @@ _blocks = blocks.Blocks(win)
 _background = background.Background(win)
 _debug_screen = debug_screen.DebugScreen(win)
 _level_generator = level_generator.LevelGenerator(_blocks,_player)
+_scene_transition = scene_transiton.SceneTransition(win,2)
 
 while RUNNING:
     
@@ -47,6 +49,7 @@ while RUNNING:
     blocks.Blocks.set_dynamic_data(deltatime)
 
     #draw calls
+    _scene_transition.play_animation(deltatime)
     _background.draw_bg(0)
     _level_generator.draw_level()
     try:
