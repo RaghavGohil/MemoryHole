@@ -1,7 +1,6 @@
 from utils import *
 from global_data import GlobalData 
 import config
-import tween
 import colors
 import level_generator
 import blocks
@@ -32,7 +31,7 @@ _blocks = blocks.Blocks(win)
 _background = background.Background(win)
 _debug_screen = debug_screen.DebugScreen(win)
 _level_generator = level_generator.LevelGenerator(_blocks,_player)
-_start_screen = start_screen.StartScreen(win,2,2)
+_start_screen = start_screen.StartScreen(win,1.5,2)
 
 while RUNNING:
     
