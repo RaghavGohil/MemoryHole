@@ -1,12 +1,13 @@
 from utils import *
+from global_data import GlobalData 
 import config
-import font_renderer
+import tween
 import colors
 import level_generator
 import blocks
 import background
 import debug_screen
-import scene_transiton
+import start_screen 
 import pygame
 import player
 
@@ -31,7 +32,7 @@ _blocks = blocks.Blocks(win)
 _background = background.Background(win)
 _debug_screen = debug_screen.DebugScreen(win)
 _level_generator = level_generator.LevelGenerator(_blocks,_player)
-_scene_transition = scene_transiton.SceneTransition(win,5)
+_start_screen = start_screen.StartScreen(win,2,2)
 
 while RUNNING:
     
@@ -44,9 +45,8 @@ while RUNNING:
     #refresh
     win.fill(colors.WHITE)
 
-    #dynamic data (dynamic data aren't game logic variables but common things like deltatime etc (python doesn't support pass by ref smh))
-    player.Player.set_dynamic_data(deltatime)
-    blocks.Blocks.set_dynamic_data(deltatime)
+    #fill in global state data
+    GlobalData.deltatime = deltatime
 
     #draw calls
     _background.draw_bg(0)
@@ -55,7 +55,7 @@ while RUNNING:
         _player.draw_and_update_sprite(lambda:_level_generator.change_level(_player),lambda:_level_generator.restart_level(_player))
     except Exception as e:
         quit_r(f"level could not be generated {e}")
-    _scene_transition.play_animation(deltatime)
+    _start_screen.draw_start_screen()
     #debug
 
     _debug_screen.draw_debug_info()

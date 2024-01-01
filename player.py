@@ -1,15 +1,12 @@
-import math
 import config
 import animator
-import colors
+from global_data import GlobalData
 from debug_screen import DebugScreen
 from my_math import *
 from blocks import * 
 import pygame
 
 class Player(pygame.sprite.Sprite):
-    
-    deltatime = 0.0 
 
     def __init__(self,win):
         pygame.sprite.Sprite.__init__(self)
@@ -40,10 +37,6 @@ class Player(pygame.sprite.Sprite):
         self.is_facing_right = True
     
     @staticmethod
-    def set_dynamic_data(deltatime):
-        Player.deltatime = deltatime
-    
-    @staticmethod
     def collided(sprite,other):
         return sprite.hitbox.colliderect(other)
 
@@ -70,7 +63,7 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.transform.flip(self.image,not self.is_facing_right,False)
 
     def __animate_player(self)->None:
-        self.animator.play_animation(self.animation_fps,Player.deltatime) 
+        self.animator.play_animation(self.animation_fps,GlobalData.deltatime) 
         self.image = self.animator.image
 
     def __move_player(self)->None:
@@ -89,7 +82,7 @@ class Player(pygame.sprite.Sprite):
             direction[1] += 1
 
         if not vec_is_zero(direction):
-            direction_speed_vec = vec_mul(vec_normalize(direction),self.move_speed*Player.deltatime)
+            direction_speed_vec = vec_mul(vec_normalize(direction),self.move_speed*GlobalData.deltatime)
             self.rect.topleft = vec_add(self.rect.topleft,direction_speed_vec)
             self.animator.change_state('walking')
         else:
@@ -109,13 +102,13 @@ class Player(pygame.sprite.Sprite):
             restart_level() # changes the level itself so there is no need to put checks for collision
 
     def __boundary_collision(self)->None:
-        if self.rect.left < 0:
+        if self.hitbox.left < 0:
             self.rect.x += self.collision_move_amt_boundary
-        if self.rect.right > config.WIN_SIZE[0]:
+        if self.hitbox.right > config.WIN_SIZE[0]:
             self.rect.x -= self.collision_move_amt_boundary
-        if self.rect.top < 0:
+        if self.hitbox.top < 0:
             self.rect.y += self.collision_move_amt_boundary
-        if self.rect.bottom > config.WIN_SIZE[1]:
+        if self.hitbox.bottom > config.WIN_SIZE[1]:
             self.rect.y -= self.collision_move_amt_boundary
 
     def __wall_collision(self)->None:
