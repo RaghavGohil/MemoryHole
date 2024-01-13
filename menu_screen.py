@@ -2,13 +2,11 @@ import pygame
 import tween
 import colors
 import config
-import scene
 import font_renderer
 
-class StartScreen(scene.Scene):
+class StartScreen:
 
     def __init__(self,win:pygame.surface.Surface,message_time:int,fade_time:int)->None:
-        super().__init__()
         self.win = win
         self.font_size = 40
         self.renderer = font_renderer.FontRenderer(win)
@@ -24,7 +22,7 @@ class StartScreen(scene.Scene):
         self.messages = ['Welcome','to memory holes.','This is a','challenge.','A really,','really','hard challenge','But I see','there are holes','in your memory.','Anyway.','Your job is','simple.','Reach black hole.','Avoid red places.']
         self.message_tween_dict = {x: tween.Tween() for x in self.messages}
 
-    def draw(self)->bool:
+    def draw_start_screen(self):
         if self.message_counter < len(self.messages):
             if not self.message_tween_dict[self.messages[self.message_counter]].finished:
                 self.message_tween_dict[self.messages[self.message_counter]].count(self.message_time)
@@ -38,7 +36,6 @@ class StartScreen(scene.Scene):
             self.surface.set_alpha(self.tween_fade.value(255,0,self.fade_time))
         self.win.blit(self.surface,(0,0))
         self.__render_font()
-        return self.scene_is_finished
     
     def __render_font(self)->None:
         self.renderer.render_font(self.font,self.current_message,colors.WHITE,config.WIN_SIZE[0],config.WIN_SIZE[1],align_center=True,change_alpha=lambda:self.surface.get_alpha())
