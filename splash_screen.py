@@ -14,8 +14,8 @@ class SplashScreen(scene.Scene):
         self.renderer = font_renderer.FontRenderer(win)
         self.font = self.renderer.create_font(self.font_size)
         self.surface = pygame.Surface((config.WIN_SIZE[0],config.WIN_SIZE[1]))
-        self.surface.fill(colors.STUDIO_COLOR)
-        self.logo_scale = 0.8
+        self.surface.fill(colors.BLACK)
+        self.logo_scale = 0.7 
         self.logo_surface = pygame.image.load('assets/logos/the_low_end_studio_title_transparent.png').convert_alpha()
         self.logo_surface = pygame.transform.smoothscale(self.logo_surface,(self.logo_surface.get_width()*self.logo_scale,self.logo_surface.get_height()*self.logo_scale)) 
         self.logo_surface_rect = self.logo_surface.get_rect(center=(config.WIN_SIZE[0]/2, config.WIN_SIZE[1]/2))

@@ -14,8 +14,10 @@ import player
 
 RUNNING = True
 
-win = pygame.display.set_mode(config.WIN_SIZE,pygame.SCALED)
+pygame.display.init()
+win = pygame.display.set_mode(config.WIN_SIZE,pygame.SCALED|pygame.DOUBLEBUF)
 pygame.display.set_caption(config.WIN_TITLE)
+
 if config.START_WITH_FULLSCREEN:
     pygame.display.toggle_fullscreen()
 
